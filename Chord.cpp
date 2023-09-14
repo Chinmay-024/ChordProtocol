@@ -3,64 +3,107 @@
 
 int main()
 {
-	Node *n0 = new Node(13);
-	Node *n1 = new Node(44);
-	Node *n2 = new Node(18);
+	vector<int> mSet(pow(2, mVal), 0);
+	cout << "Enter the value of m where 2^m-1 is max value for a node or key and note all node index should be unique: ";
+	cin >> mVal;
+	cout << "Enter the number of nodes you want to insert in the network: ";
+	int n;
+	cin >> n;
+	if (n > pow(2, mVal))
+	{
+		cout << "\033[31m"
+			 << "WRONG INPUT\n"
+			 << "\033[0m";
+		return 0;
+	}
+	vector<Node *> nodes(n);
+	for (int i = 0; i < n; i++)
+	{
+		cout << "Enter node value : ";
+		int a;
+		cin >> a;
+		if (a >= pow(2, mVal))
+		{
+			cout << "\033[31m"
+				 << "WRONG INPUT\n"
+				 << "\033[0m";
+			return 0;
+		}
+		if (mSet[a] == 1)
+		{
+			cout << "\033[31m"
+				 << "Index not unique\n"
+				 << "\033[0m";
+			return 0;
+		}
+		mSet[a] = 1;
+
+		nodes[i] = new Node(a);
+	}
 
 	// n0 join
-	n0->join(NULL);
-	cout << "\n n0 joins the Chord network\n";
+	nodes[0]->join(NULL);
+	for (int i = 1; i < n; i++)
+	{
+		nodes[i]->join(nodes[i - 1]);
+	}
 
-	n0->insert_key(3, 3);
-	n0->insert_key(4, 4);
-	n0->fingertable->printFingerTable(n0->predecessor->id);
+	cout << "Enter the number of keys to insert : ";
+	int k;
+	cin >> k;
+	for (int i = 0; i < k; i++)
+	{
+		cout << "Enter key value : ";
+		int a;
+		cin >> a;
+		nodes[0]->insert_key(a, a);
+	}
 	cout << "\n\n";
+	for (int i = 0; i < n; i++)
+	{
+		nodes[i]->stabilize();
+	}
+	for (int i = 0; i < n; i++)
+	{
+		nodes[i]->stabilize();
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cout << "\n**** Pred ID : " << nodes[i]->predecessor->id << " ****";
+		nodes[i]->fingertable->printFingerTable(nodes[i]->predecessor->id);
+		cout << "\n\n";
+	}
 
-	// n1 join
-	n1->join(n0);
+	std::ofstream outputFile("FingerTable.txt");
 
-	// stabilize
-	n1->stabilize();
-	n0->stabilize();
-	cout << "\n n1 joins the Chord network\n";
+	// Redirect the cout stream to the output file stream
+	std::streambuf *originalCoutStream = std::cout.rdbuf();
+	std::cout.rdbuf(outputFile.rdbuf());
 
-	n1->insert_key(9, 9);
-	n1->insert_key(14, 14);
-	n1->insert_key(15, 15);
-	n1->insert_key(29, 29);
-	n0->insert_key(50, 50);
-	n0->fingertable->printFingerTable(n0->predecessor->id);
-	n1->fingertable->printFingerTable(n1->predecessor->id);
-	cout << "\n\n";
+	for (int i = 0; i < n; i++)
+	{
+		cout << "\n**** Pred ID : " << nodes[i]->predecessor->id << " ****";
+		nodes[i]->fingertable->printFingerTable(nodes[i]->predecessor->id);
+		cout << "\n\n";
+	}
 
-	// n2 join
-	n2->join(n0);
+	// Restore the original cout stream
+	std::cout.rdbuf(originalCoutStream);
 
-	// stabilize
-	n0->stabilize();
-	n1->stabilize();
+	// Close the output file
+	outputFile.close();
 
-	cout << "\n n2 joins the Chord network\n";
-	n0->insert_key(16, 16);
-	n1->insert_key(18, 18);
-	n2->insert_key(44, 44);
-	n1->insert_key(35, 35);
-	n1->insert_key(38, 38);
-	n0->insert_key(41, 41);
-
-	n0->fingertable->printFingerTable(n0->predecessor->id);
-	n1->fingertable->printFingerTable(n1->predecessor->id);
-	n2->fingertable->printFingerTable(n2->predecessor->id);
-	cout << "\n\n";
-
-	// Random search for values on non-local nodes i.e nodes that may/may not contain the
 	// keys being searched for, locally on them
-	cout << n0->find_key(50) << endl;
-	cout << n0->find_key(4) << endl;
-	cout << n2->find_key(29) << endl;
-	cout << n1->find_key(14) << endl;
-	cout << n1->find_key(3) << endl;
-	cout << n2->find_key(18) << endl;
+	cout << "Enter number of keys to be searched : ";
+	int nk;
+	cin >> nk;
+	for (int i = 0; i < nk; i++)
+	{
+		cout << "Enter key value to be searched : ";
+		int a;
+		cin >> a;
+		nodes[0]->find_key(a);
+	}
 
 	return 0;
 }

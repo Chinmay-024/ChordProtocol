@@ -1,0 +1,26 @@
+Enter the value of m where 2^m-1 is max value for a node or key and note all values should be unique: 8
+Enter the number of nodes you want to insert in the network: 3
+Enter node value : 13
+Enter node value : 44
+Enter node value : 18
+Enter the number of keys to insert : 13
+Enter key value : 3
+Enter key value : 4
+Enter key value : 9
+Enter key value : 14
+Enter key value : 15
+Enter key value : 29
+Enter key value : 50
+Enter key value : 16
+Enter key value : 18
+Enter key value : 44
+Enter key value : 35
+Enter key value : 38
+Enter key value : 41
+Enter number of keys to be searched : 6
+Enter key value to be searched : 50
+Enter key value to be searched : 4
+Enter key value to be searched : 29
+Enter key value to be searched : 14
+Enter key value to be searched : 3
+Enter key value to be searched : 18

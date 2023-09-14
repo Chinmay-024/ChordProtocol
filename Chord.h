@@ -1,10 +1,6 @@
-#include <iostream>
-#include <vector>
-#include <map>
-#include <math.h>
 #include <bits/stdc++.h>
-
 using namespace std;
+int mVal;
 
 class Node;
 
@@ -32,7 +28,6 @@ public:
 
 class Node
 {
-
 public:
 	uint64_t id;
 	Node *predecessor;
@@ -80,7 +75,7 @@ public:
 	{
 		if (node == NULL)
 		{ // First node to join
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < mVal; i++)
 			{
 				fingertable->fingerTable.push_back(this);
 			}
@@ -88,7 +83,7 @@ public:
 		}
 		else
 		{
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < mVal; i++)
 			{
 				fingertable->fingerTable.push_back(this);
 			}
@@ -171,16 +166,18 @@ public:
 	}
 
 	// Search a key value pair
-	string find_key(int key)
+	void find_key(int key)
 	{
 		int node_id = 0;
 		string ret_val;
+		int found = 0;
 
 		cout << "\n Searching Key " << key << " on node " << id << endl;
 		node_id = local_key_lookup(key);
 		if (node_id >= 0)
 		{
 			ret_val = " Found value - " + to_string(node_id) + " on Node - " + to_string(id) + "\n";
+			found = 1;
 		}
 		else
 		{
@@ -189,13 +186,18 @@ public:
 				node_id = fingertable->fingerTable[i]->local_key_lookup(key);
 				if (node_id >= 0)
 				{
+					found = 1;
 					ret_val = " Found value - " + to_string(node_id) + " on Node - " + to_string(fingertable->fingerTable[i]->id) + "\n";
 					break;
 				}
 			}
 		}
-
-		return ret_val;
+		if (found)
+			cout << "\033[32m" << ret_val << "\033[0m";
+		else
+			cout << "\033[31m"
+				 << " Not Found"
+				 << "\033[0m";
 	}
 
 	// Insert key
@@ -213,7 +215,7 @@ public:
 		{
 			succ->insert_key_local(key, value);
 		}
-		else if (predecessor->id > id && key > predecessor->id)
+		else if (predecessor->id > id && (key > predecessor->id || key <= id))
 		{
 			insert_key_local(key, value);
 		}
