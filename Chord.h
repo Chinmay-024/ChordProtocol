@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
+
 int mVal;
 
 class Node;
@@ -103,7 +104,7 @@ public:
 			// move keys on the successor before changing predecessor
 			moveKeys(succ, id);
 
-			// Update successor's predecssor to self
+			// Update successor's predecessor to self
 			succ->predecessor = this;
 
 			// update finger table
@@ -251,6 +252,40 @@ public:
 				node = local_keys.find(key)->second;
 
 		return node;
+	}
+
+	// Remove the node from the Chord network
+	void remove(vector<Node *> &nodes, int j)
+	{
+		// Find the predecessor node
+		Node *predecessorNode = this->predecessor;
+		for (auto i : nodes)
+		{
+			if (i->predecessor == this)
+			{
+				i->predecessor = predecessorNode;
+			}
+			if (i != this)
+				removeNode(this, i);
+		}
+		nodes.erase(nodes.begin() + j);
+
+		for (auto i : local_keys)
+		{
+			nodes[0]->insert_key(i.first, i.second);
+		}
+	}
+
+	void removeNode(Node *nodeToRemove, Node *cur)
+	{
+		FingerTable *ft = cur->fingertable;
+		for (int i = 0; i < ft->fingerTable.size(); i++)
+		{
+			if (ft->fingerTable[i] == nodeToRemove)
+			{
+				ft->fingerTable[i] = nodeToRemove->fingertable->fingerTable[0];
+			}
+		}
 	}
 };
 

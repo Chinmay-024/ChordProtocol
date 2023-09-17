@@ -84,6 +84,17 @@ The `find_key(int key)` method searches for a key-value pair in the Chord networ
 
 The `insert_key(int key, int value)` method inserts a key-value pair into the Chord network. It determines the appropriate node for insertion based on the Chord algorithm's principles and inserts the key-value pair either locally or on the successor node.
 
+### Deleteing Keys
+
+To remove a node from a Chord network, you can follow these steps:
+
+1. Find the predecessor node of the node you want to remove.
+2. Transfer the keys from the node you want to remove to its predecessor.
+3. Update the predecessor node's finger table to remove the node you want to remove.
+4. Update the successor node's predecessor to point to the predecessor node.
+5. Optionally, update the finger tables of other nodes.
+6. Clean up resources and delete the node from the network.
+
 ## Usage
 
 To use this Chord algorithm implementation and example:
@@ -132,6 +143,7 @@ Enter key value to be searched : 29
 Enter key value to be searched : 14
 Enter key value to be searched : 3
 Enter key value to be searched : 18
+Enter node to be removed : 13
 ```
 
 ## Sample Output
@@ -214,6 +226,27 @@ Enter key value to be searched : 99
  Node 13 searched
  Node 13 searched
  Not Found
+
+ Enter node to be removed : 13
+
+ **** Pred ID : 18 ****
+ **** Node ID : 44 ****
+ FingerTable
+ 1 : 18
+ 2 : 18
+
+ Keys : 29  35  38  41
+ **********************
+
+
+
+ **** Pred ID : 44 ****
+ **** Node ID : 18 ****
+ FingerTable
+ 1 : 44
+
+ Keys : 3  4  9  14  15  16  18  44  50
+ **********************
 ```
 
 ## Conclusion

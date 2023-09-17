@@ -16,7 +16,7 @@ int main()
 			 << "\033[0m";
 		return 0;
 	}
-	vector<Node *> nodes(n);
+	vector<Node *> nodes;
 	for (int i = 0; i < n; i++)
 	{
 		cout << "Enter node value : ";
@@ -38,7 +38,7 @@ int main()
 		}
 		mSet[a] = 1;
 
-		nodes[i] = new Node(a);
+		nodes.push_back(new Node(a));
 	}
 
 	// n0 join
@@ -59,13 +59,12 @@ int main()
 		nodes[0]->insert_key(a, a);
 	}
 	cout << "\n\n";
-	for (int i = 0; i < n; i++)
+	for (int z = 0; z < 2; z++)
 	{
-		nodes[i]->stabilize();
-	}
-	for (int i = 0; i < n; i++)
-	{
-		nodes[i]->stabilize();
+		for (int i = 0; i < n; i++)
+		{
+			nodes[i]->stabilize();
+		}
 	}
 	for (int i = 0; i < n; i++)
 	{
@@ -103,6 +102,44 @@ int main()
 		int a;
 		cin >> a;
 		nodes[0]->find_key(a);
+	}
+
+	if (nodes.size() == 1)
+	{
+		cout << "You cant remove more nodes only 1 rem";
+		return 0;
+	}
+	cout << "Enter node to be removed : ";
+
+	fflush(stdin);
+	fflush(stdout);
+	cin >> nk;
+	int flag = 0;
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		if (nodes[i]->id == nk)
+		{
+			flag = 1;
+			nodes[i]->remove(nodes, i);
+		}
+	}
+	if (!flag)
+		cout << "No such node exist \n";
+	if (nodes.size() > 1)
+	{
+		for (int z = 0; z < 2; z++)
+		{
+			for (int i = 0; i < nodes.size(); i++)
+			{
+				nodes[i]->stabilize();
+			}
+		}
+	}
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		cout << "\n**** Pred ID : " << nodes[i]->predecessor->id << " ****";
+		nodes[i]->fingertable->printFingerTable(nodes[i]->predecessor->id);
+		cout << "\n\n";
 	}
 
 	return 0;
